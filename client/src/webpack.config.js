@@ -1,35 +1,41 @@
 const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
+const HTMLWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  mode: "development",
-  entry: path.resolve(__dirname, "src/index.js"),
+  entry: "./index.js",
   output: {
-    path: path.resolve(__dirname, "output"),
     filename: "bundle.js",
-  },
-  resolve: {
-    extensions: [".js", ".jsx"],
+    path: path.resolve("dist"),
+    publicPath: "/",
   },
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-        },
+        use: "babel-loader",
       },
       {
-        test: /\.css$/i,
+        test: /\.html$/,
+        use: "html-loader",
+      },
+      /*Choose only one of the following two: if you're using 
+      plain CSS, use the first one, and if you're using a
+      preprocessor, in this case SASS, use the second one*/
+      {
+        test: /\.css$/,
         use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.scss$/,
+        use: ["style-loader", "css-loader", "sass-loader"],
       },
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: "./public/index.html",
-      filename: "./index.html",
+    new HTMLWebpackPlugin({
+      template: "index.html",
     }),
   ],
 };
